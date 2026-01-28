@@ -1,5 +1,4 @@
-'use client';
-
+import { Suspense } from "react";
 import { Chatbot } from "@/components/chatbot";
 import HeaderMenu from "@/components/ui/header";
 
@@ -10,7 +9,10 @@ export default function ChatbotPage() {
       <HeaderMenu />
 
       <main className="flex flex-col w-full max-w-screen-xl mx-auto gap-8 row-start-2 items-center sm:items-start px-2 sm:px-4">
-        <Chatbot />
+        {/* useSearchParams() inside Chatbot requires a Suspense boundary */}
+        <Suspense fallback={null}>
+          <Chatbot />
+        </Suspense>
       </main>
     </div>
   );
