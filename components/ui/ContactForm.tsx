@@ -9,11 +9,9 @@ interface FormState {
   message: string | null;
 }
 
+const WEB3FORMS_ACCESS_KEY = process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY;
 
 export default function ContactForm() {
-
-  const WEB3FORMS_ACCESS_KEY = process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY;
-  console.log("Web3Forms Access Key:", WEB3FORMS_ACCESS_KEY);
   const [ name, setName ] = useState("");
   const [ email, setEmail ] = useState("");
   const [ subject, setSubject ] = useState("");
