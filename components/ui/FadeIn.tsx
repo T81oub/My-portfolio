@@ -15,7 +15,7 @@ interface ViewportOptions {
 }
 
 export function FadeIn({ variants, viewportProp, ...props }: React.ComponentPropsWithoutRef<typeof motion.div> & { variants?: Variants; viewportProp?: ViewportOptions }) {
-  let isInStaggerGroup = useContext(FadeInStaggerContext);
+  const isInStaggerGroup = useContext(FadeInStaggerContext);
 
   return (
     <motion.div
