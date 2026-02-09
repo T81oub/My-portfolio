@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import Link from 'next/link';
 import clsx from 'clsx';
 import { FileText, X } from 'lucide-react';
 import { FadeIn, FadeInStagger } from '@/components/ui/FadeIn';
@@ -14,20 +13,20 @@ export function Socials({ className }: { className?: string }) {
 
   return (
     <>
-      <FadeInStagger role="list" className={clsx('flex items-center gap-x-4 text-blue-600 mt-1', className)}>
+      <FadeInStagger role="list" className={clsx('d-flex flex-wrap align-items-center gap-2', className)}>
         {portfolio.socials.map((social) => {
           const Icon = getSocialIcon(social.platform);
           return (
             <FadeIn key={social.url}>
-              <Link
+              <a
                 href={social.url}
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={social.platform}
-                className="transition hover:text-blue-400/80 duration-200"
+                className="btn btn-glass btn-icon"
               >
-                <Icon className="h-8 w-8" />
-              </Link>
+                <Icon size={18} />
+              </a>
             </FadeIn>
           );
         })}
@@ -35,32 +34,41 @@ export function Socials({ className }: { className?: string }) {
         {portfolio.resumes.length > 0 && (
           <FadeIn>
             <button
+              type="button"
               onClick={() => setShowResume(true)}
-              className="group relative px-5 py-2 rounded-full bg-blue-600 text-white font-semibold shadow-lg hover:scale-105 transition-all duration-300"
+              className="btn btn-gradient rounded-pill px-4 d-inline-flex align-items-center gap-2 ms-1"
             >
-              <span className="flex items-center gap-2 z-10 relative">
-                <FileText className="w-5 h-5" />
-                View Resume
-              </span>
+              <FileText size={18} />
+              View Resume
             </button>
           </FadeIn>
         )}
       </FadeInStagger>
 
-      {/* Resume Modal */}
       {showResume && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-          <div className="relative w-full max-w-4xl max-h-[90vh] bg-white rounded-xl shadow-xl overflow-y-auto p-6">
-            <Resume />
-            <button
-              onClick={() => setShowResume(false)}
-              className="absolute top-4 right-4 text-gray-600 hover:text-red-500 transition"
-              aria-label="Close resume"
-            >
-              <X className="w-6 h-6" />
-            </button>
+        <>
+          <div className="modal d-block modal-glass" tabIndex={-1} role="dialog" onClick={() => setShowResume(false)}>
+            <div className="modal-dialog modal-dialog-centered modal-lg" onClick={(e) => e.stopPropagation()}>
+              <div className="modal-content p-2">
+                <div className="modal-header border-0">
+                  <h2 className="modal-title h4 section-title">Resume</h2>
+                  <button
+                    type="button"
+                    className="btn btn-glass btn-icon ms-auto"
+                    aria-label="Close resume"
+                    onClick={() => setShowResume(false)}
+                  >
+                    <X size={18} />
+                  </button>
+                </div>
+                <div className="modal-body pt-0">
+                  <Resume />
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
+          <div className="modal-backdrop show" />
+        </>
       )}
     </>
   );

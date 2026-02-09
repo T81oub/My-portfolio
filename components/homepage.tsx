@@ -2,76 +2,82 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { SendIcon } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { ArrowUp, Sparkles } from "lucide-react";
 import { FadeIn } from "@/components/ui/FadeIn";
 import { AnimatedTitle } from "@/components/ui/AnimatedTitle";
 import { Socials } from "@/components/ui/Socials";
-import { Textarea } from "./ui/textarea";
 import portfolio from "@/portfolio.config";
 
 const { profile } = portfolio;
+
+const quickPrompts = ["What are your projects?", "What are your skills?", "Tell me about your experience."];
 
 export function HeroSection() {
   const [message, setMessage] = useState("");
   const router = useRouter();
 
-  const handleSend = () => {
-    if (!message.trim()) return;
-    router.push(`/chatbot?message=${encodeURIComponent(message.trim())}`);
+  const ask = (text: string) => {
+    if (!text.trim()) return;
+    router.push(`/chatbot?message=${encodeURIComponent(text.trim())}`);
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      handleSend();
-    }
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    ask(message);
   };
 
   return (
-    <div className="flex flex-col items-center justify-center w-full h-full gap-10">
-      <FadeIn className="max-w-5xl pt-10 md:pt-[20vh] 2xl:pt-[15vh]">
-        <h1 className="font-display text-5xl font-medium tracking-tight [text-wrap:balance] sm:text-6xl">
-          Hi, I&apos;m <br />
-          {profile.name}
-          <span className="wave">👋</span>
-        </h1>
-        <div className="flex flex-wrap items-center mt-3 mb-1 gap-x-1">
-          {profile.openToWork && (
-            <>
-              Open to work
-              <span className="relative flex h-2 w-2 self-center mx-1">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+    <section className="hero container d-flex flex-column justify-content-center">
+      <div className="row justify-content-center">
+        <div className="col-lg-10 col-xl-9 text-center">
+          <FadeIn>
+            {profile.openToWork && (
+              <span className="chip mb-4">
+                <span className="status-dot" />
+                {profile.status}
               </span>
-              <span className="mx-1">/</span>
-            </>
-          )}
-          <AnimatedTitle />
+            )}
+
+            <h1 className="hero-title mb-3">
+              Hi, I&apos;m <span className="text-gradient">{profile.name}</span>{" "}
+              <span className="wave">👋</span>
+            </h1>
+
+            <p className="fs-3 mb-3">
+              <AnimatedTitle />
+            </p>
+
+            <p className="lead text-muted-soft mx-auto mb-0" style={{ maxWidth: 620 }}>
+              Skip the scrolling. Ask my AI assistant anything about my experience, projects and skills.
+            </p>
+          </FadeIn>
+
+          <form onSubmit={handleSubmit} className="prompt-box mx-auto mt-5" style={{ maxWidth: 680 }}>
+            <Sparkles size={20} color="#a5b4fc" className="flex-shrink-0" />
+            <input
+              type="text"
+              placeholder="Ask me something..."
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              aria-label="Ask a question"
+            />
+            <button type="submit" className="btn btn-gradient btn-icon flex-shrink-0" disabled={!message.trim()}>
+              <ArrowUp size={20} />
+              <span className="visually-hidden">Send</span>
+            </button>
+          </form>
+
+          <div className="d-flex flex-wrap justify-content-center gap-2 mt-3">
+            {quickPrompts.map((prompt) => (
+              <button key={prompt} type="button" className="btn btn-glass btn-sm suggestion" onClick={() => ask(prompt)}>
+                {prompt}
+              </button>
+            ))}
+          </div>
+
+          <Socials className="justify-content-center mt-5" />
         </div>
-      </FadeIn>
-
-      <Socials />
-
-      <div className="relative w-full max-w-4xl">
-        <Textarea
-          placeholder="Ask me something..."
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-          onKeyDown={handleKeyDown}
-          className="w-full pr-14 min-h-[64px]"
-        />
-        <Button
-          type="button"
-          size="icon"
-          onClick={handleSend}
-          disabled={!message.trim()}
-          className="absolute top-1/2 right-3 -translate-y-1/2 rounded-full bg-blue-600 hover:bg-blue-700 text-white disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          <SendIcon className="w-5 h-5" />
-          <span className="sr-only">Send</span>
-        </Button>
       </div>
-    </div>
+    </section>
   );
 }

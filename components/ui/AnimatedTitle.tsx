@@ -34,9 +34,9 @@ export function AnimatedTitle() {
   }, [text, deleting, roleIndex, roles]);
 
   return (
-    <span className="inline-flex text-blue-600">
-      {text}
-      <span className="ml-0.5 animate-pulse">|</span>
+    <span className="fw-semibold">
+      <span className="text-gradient">{text}</span>
+      <span className="typing-caret" aria-hidden="true" />
     </span>
   );
 }
