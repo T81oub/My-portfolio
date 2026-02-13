@@ -4,104 +4,66 @@ import { motion } from "framer-motion";
 import { Briefcase, Check } from "lucide-react";
 import portfolio from "@/portfolio.config";
 
-const workExperiencesData = portfolio.experience;
-
 const containerVariants = {
   hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.3,
-    },
-  },
+  visible: { opacity: 1, transition: { staggerChildren: 0.2 } },
 };
 
 const itemVariants = {
-  hidden: { opacity: 0, x: -50 },
-  visible: {
-    opacity: 1,
-    x: 0,
-    transition: { type: "spring" as const, stiffness: 100 }
-  },
+  hidden: { opacity: 0, x: -30 },
+  visible: { opacity: 1, x: 0, transition: { type: "spring" as const, stiffness: 100 } },
 };
 
 export function WorkExperiences() {
-  if (!workExperiencesData || workExperiencesData.length === 0) {
-    return null;
-  }
+  const experiences = portfolio.experience;
+  if (experiences.length === 0) return null;
 
   return (
-    <section
-  id="experience"
-  className="bg-white text-gray-900 overflow-hidden"
->
-  <div className="container relative z-10 mx-auto max-w-4xl px-4">
-    <motion.div
-      className="relative mt-16"
-      variants={containerVariants}
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, amount: 0.1 }}
-    >
-      {/* Timeline vertical line */}
-      <div className="absolute left-4 top-0 h-full w-0.5 bg-gray-300 md:left-1/2 md:-translate-x-1/2"></div>
+    <section id="experience">
+      <p className="eyebrow mb-2">Career</p>
+      <h3 className="section-title mb-4">Work experience</h3>
 
-      {workExperiencesData.map((exp, index) => (
-        <motion.div
-          key={`${exp.company}-${exp.startDate}`}
-          className="relative mb-12 pl-12 md:pl-0"
-          variants={itemVariants}
-        >
-          {/* Timeline icon */}
-          <div
-            className={`absolute top-1 left-4 flex h-8 w-8 items-center justify-center rounded-full bg-blue-600 ring-8 ring-white md:left-1/2 md:-translate-x-1/2`}
-          >
-            <Briefcase className="h-4 w-4 text-white" />
-          </div>
+      <motion.div
+        className="timeline"
+        variants={containerVariants}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.1 }}
+      >
+        {experiences.map((exp) => (
+          <motion.div key={`${exp.company}-${exp.startDate}`} className="timeline-item mb-4" variants={itemVariants}>
+            <span className="timeline-dot">
+              <Briefcase size={13} />
+            </span>
 
-          {/* Timeline card */}
-          <div
-            className={`relative md:w-1/2 ${
-              index % 2 === 0
-                ? "md:left-0 md:pr-8"
-                : "md:left-1/2 md:pl-8"
-            }`}
-          >
-            <div className="rounded-2xl border border-gray-200 bg-gray-50 p-6 shadow-sm transition-all duration-300 hover:shadow-md hover:border-blue-200">
-
-              {/* Header */}
-              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
-                <div className="flex-grow">
-                  <h3 className="text-xl font-semibold text-gray-900">{exp.role}</h3>
-                  <p className="mt-1 text-base font-medium text-gray-600">
+            <div className="glass-card hover-lift p-4">
+              <div className="d-flex flex-column flex-sm-row justify-content-between gap-2">
+                <div>
+                  <h4 className="h5 fw-semibold mb-1">{exp.role}</h4>
+                  <div className="text-muted-soft">
                     {exp.company}
-                    {exp.location && <span className="text-sm font-normal text-gray-500"> · {exp.location}</span>}
-                  </p>
+                    {exp.location && <span className="small"> · {exp.location}</span>}
+                  </div>
                 </div>
-                <p className="flex-shrink-0 whitespace-nowrap rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold text-blue-700 mt-2 sm:mt-0">
+                <span className="chip align-self-start text-nowrap">
                   {exp.startDate} - {exp.endDate}
-                </p>
+                </span>
               </div>
 
-              {/* Description */}
-              <p className="mt-4 text-sm text-gray-700">{exp.description}</p>
+              <p className="mt-3 mb-3">{exp.description}</p>
 
-              {/* Responsibilities */}
-              <ul className="mt-4 space-y-2 text-sm text-gray-700">
-                {exp.highlights.map((resp, i) => (
-                  <li key={i} className="flex items-start gap-2">
-                    <Check className="mt-1 h-4 w-4 flex-shrink-0 text-blue-500" />
-                    <span>{resp}</span>
+              <ul className="list-unstyled mb-0 d-grid gap-2">
+                {exp.highlights.map((item, i) => (
+                  <li key={i} className="d-flex gap-2 small text-muted-soft">
+                    <Check size={16} className="flex-shrink-0 mt-1" color="#a5b4fc" />
+                    <span>{item}</span>
                   </li>
                 ))}
               </ul>
             </div>
-          </div>
-        </motion.div>
-      ))}
-    </motion.div>
-  </div>
-</section>
-
+          </motion.div>
+        ))}
+      </motion.div>
+    </section>
   );
 }
