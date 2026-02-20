@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { motion, easeInOut } from "framer-motion";
 import ContactForm from "@/components/ui/ContactForm";
 import portfolio from "@/portfolio.config";
@@ -27,53 +26,64 @@ const cardVariants = {
 
 export function Contact() {
   return (
-    <div id="contact" className="relative bg-white text-gray-900 overflow-hidden">
-      <div className="container relative z-10 mx-auto px-4">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-12 items-start">
-          <motion.div
-            variants={cardVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.2 }}
-            className="bg-gray-100 border border-gray-300 rounded-xl p-6 sm:p-8 shadow-xl mt-10"
-          >
-            <h3 className="text-2xl font-semibold text-gray-900 mb-6">Contact Information</h3>
-            <ul className="space-y-5 mb-8">
+    <section id="contact">
+      <p className="eyebrow mb-2">Get in touch</p>
+      <h3 className="section-title mb-4">Let&apos;s work together</h3>
+
+      <div className="row g-4">
+        <motion.div
+          className="col-lg-5"
+          variants={cardVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.2 }}
+        >
+          <div className="glass-card h-100 p-4">
+            <h4 className="h5 fw-semibold mb-4">Contact information</h4>
+            <ul className="list-unstyled d-grid gap-3 mb-4">
               {contactDetails.map((item) => (
-                <li key={item.name} className="flex items-start gap-4">
-                  <item.icon className="text-blue-600 w-5 h-5 mt-1 flex-shrink-0" />
-                  <div>
-                    <p className="text-sm text-gray-500">{item.name}</p>
-                    <Link
-                      href={item.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-gray-800 hover:text-blue-700 transition-colors break-all"
-                    >
-                      {item.value}
-                    </Link>
-                  </div>
+                <li key={item.name}>
+                  <a
+                    href={item.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="d-flex align-items-center gap-3 text-reset text-decoration-none"
+                  >
+                    <span className="btn btn-glass btn-icon flex-shrink-0">
+                      <item.icon size={18} />
+                    </span>
+                    <span className="min-w-0">
+                      <span className="d-block small text-muted-soft">{item.name}</span>
+                      <span className="d-block text-break">{item.value}</span>
+                    </span>
+                  </a>
                 </li>
               ))}
             </ul>
 
-            <div className="border-t border-gray-300 pt-6">
-              <h4 className="text-lg font-medium text-gray-900 mb-3">Current Status</h4>
-              <div className="flex items-center gap-2">
-                <div
-                  className={`w-3 h-3 rounded-full ${profile.openToWork ? "bg-green-500 animate-pulse" : "bg-gray-400"}`}
-                ></div>
-                <p className="text-sm text-gray-700">{profile.status}</p>
+            <div className="border-top pt-4">
+              <h5 className="h6 fw-semibold mb-2">Current status</h5>
+              <div className="d-flex align-items-center gap-2 small text-muted-soft">
+                <span className={`status-dot ${profile.openToWork ? "" : "off"}`} />
+                {profile.status}
               </div>
             </div>
-          </motion.div>
+          </div>
+        </motion.div>
 
-          <div className="bg-gray-100 border border-gray-300 rounded-xl p-6 sm:p-8 shadow-xl mt-10">
-            <h3 className="text-2xl font-semibold text-gray-900 mb-6">Send Me a Message</h3>
+        <motion.div
+          className="col-lg-7"
+          variants={cardVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.2 }}
+        >
+          <div className="glass-card h-100 p-4">
+            <h4 className="h5 fw-semibold mb-4">Send me a message</h4>
             <ContactForm />
           </div>
-        </div>
+        </motion.div>
       </div>
-    </div>
+    </section>
   );
 }

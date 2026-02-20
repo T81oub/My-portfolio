@@ -11,27 +11,27 @@ interface FormState {
 
 const WEB3FORMS_ACCESS_KEY = process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY;
 
+const fieldVariants = {
+  hidden: { opacity: 0, y: 10 },
+  visible: (i: number) => ({ opacity: 1, y: 0, transition: { delay: i * 0.05, duration: 0.3 } }),
+};
+
 export default function ContactForm() {
-  const [ name, setName ] = useState("");
-  const [ email, setEmail ] = useState("");
-  const [ subject, setSubject ] = useState("");
-  const [ message, setMessage ] = useState("");
-  const [ honeypot, setHoneypot ] = useState("");
-  const [ formState, setFormState ] = useState<FormState>({ status: "idle", message: null });
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [subject, setSubject] = useState("");
+  const [message, setMessage] = useState("");
+  const [honeypot, setHoneypot] = useState("");
+  const [formState, setFormState] = useState<FormState>({ status: "idle", message: null });
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setFormState({ status: "loading", message: null });
 
     if (!WEB3FORMS_ACCESS_KEY) {
-      setFormState({
-        status: "error",
-        message: "Form submission is currently unavailable. Missing configuration.",
-      });
-      console.error("Web3Forms Access Key is not defined.");
+      setFormState({ status: "error", message: "Form submission is currently unavailable. Missing configuration." });
       return;
     }
-
     if (!name || !email || !subject || !message) {
       setFormState({ status: "error", message: "Please fill in all required fields." });
       return;
@@ -56,17 +56,11 @@ export default function ContactForm() {
     formData.append("replyto", email);
 
     try {
-      const response = await fetch("https://api.web3forms.com/submit", {
-        method: "POST",
-        body: formData,
-      });
-
+      const response = await fetch("https://api.web3forms.com/submit", { method: "POST", body: formData });
       const data = await response.json();
 
       if (data.success) {
-        setFormState({
-          status: "success", message: data.message || "Your message has been sent successfully!"
-        });
+        setFormState({ status: "success", message: data.message || "Your message has been sent successfully!" });
         setName("");
         setEmail("");
         setSubject("");
@@ -74,158 +68,129 @@ export default function ContactForm() {
         setHoneypot("");
       } else {
         console.error("Web3Forms submission error:", data);
-        setFormState({
-          status: "error",
-          message: data.message || "An error occurred. Please try again."
-        });
+        setFormState({ status: "error", message: data.message || "An error occurred. Please try again." });
       }
     } catch (error) {
       console.error("Contact form submission error:", error);
-      setFormState({
-        status: "error",
-        message: "Could not connect to the server. Please try again later."
-      });
+      setFormState({ status: "error", message: "Could not connect to the server. Please try again later." });
     }
   };
 
-  const inputVariants = {
-    hidden: { opacity: 0, y: 10 },
-    visible: (i: number) => ({
-      opacity: 1,
-      y: 0,
-      transition: { delay: i * 0.05, duration: 0.3 }
-    }),
-  };
-
-  const inputBaseClasses =
-    "block w-full px-4 py-2.5 rounded-lg shadow-sm text-black placeholder-gray-500 text-sm sm:text-base transition-colors duration-200";
-  const inputBgFocusClasses =
-    "bg-white-700/60 border-zinc-600 focus:ring-pink-500 focus:border-pink-500";
-
   return (
     <motion.form
-      onSubmit={ handleSubmit }
-      className="space-y-5 sm:space-y-6"
+      onSubmit={handleSubmit}
       initial="hidden"
       whileInView="visible"
-      viewport={ { once: true, amount: 0.2 } }
-      variants={ { visible: { transition: { staggerChildren: 0.05 } } } }
+      viewport={{ once: true, amount: 0.2 }}
+      variants={{ visible: { transition: { staggerChildren: 0.05 } } }}
+      noValidate
     >
-      { !WEB3FORMS_ACCESS_KEY && (
-        <div className="p-3 rounded-md bg-yellow-500 bg-opacity-20 text-black text-sm flex items-center">
-          <FiAlertTriangle className="mr-2 h-5 w-5 flex-shrink-0" />
-          Form submission configuration is pending. Site admin needs to set up the Access Key.
+      {!WEB3FORMS_ACCESS_KEY && (
+        <div className="alert alert-warning d-flex align-items-center gap-2 py-2 small" role="alert">
+          <FiAlertTriangle className="flex-shrink-0" />
+          The contact form is not configured yet. Add a Web3Forms access key to enable it.
         </div>
-      ) }
+      )}
 
-      <motion.div variants={ inputVariants } custom={ 0 }>
-        <label htmlFor="name" className="block text-sm font-medium text-zinc-700 mb-1.5">
-          Full Name <span className="text-red-400">*</span>
-        </label>
-        <input
-          type="text"
-          name="name"
-          id="name"
-          required
-          value={ name }
-          onChange={ (e) => setName(e.target.value) }
-          className={ `${inputBaseClasses} ${inputBgFocusClasses}` }
-          placeholder="Your Name"
-        />
-      </motion.div>
+      <div className="row g-3">
+        <motion.div className="col-sm-6" variants={fieldVariants} custom={0}>
+          <label htmlFor="name" className="form-label small text-muted-soft">
+            Full name <span className="text-danger">*</span>
+          </label>
+          <input
+            type="text"
+            id="name"
+            required
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            className="form-control form-control-glass"
+            placeholder="Your name"
+          />
+        </motion.div>
 
-      <motion.div variants={ inputVariants } custom={ 1 }>
-        <label htmlFor="email" className="block text-sm font-medium text-zinc-700 mb-1.5">
-          Email Address <span className="text-red-400">*</span>
-        </label>
-        <input
-          type="email"
-          name="email"
-          id="email"
-          required
-          value={ email }
-          onChange={ (e) => setEmail(e.target.value) }
-          className={ `${inputBaseClasses} ${inputBgFocusClasses}` }
-          placeholder="youremail@example.com"
-        />
-      </motion.div>
+        <motion.div className="col-sm-6" variants={fieldVariants} custom={1}>
+          <label htmlFor="email" className="form-label small text-muted-soft">
+            Email address <span className="text-danger">*</span>
+          </label>
+          <input
+            type="email"
+            id="email"
+            required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="form-control form-control-glass"
+            placeholder="you@example.com"
+          />
+        </motion.div>
 
-      <motion.div variants={ inputVariants } custom={ 2 }>
-        <label htmlFor="subject" className="block text-sm font-medium text-zinc-700 mb-1.5">
-          Subject <span className="text-red-400">*</span>
-        </label>
-        <input
-          type="text"
-          name="subject"
-          id="subject"
-          required
-          value={ subject }
-          onChange={ (e) => setSubject(e.target.value) }
-          className={ `${inputBaseClasses} ${inputBgFocusClasses}` }
-          placeholder="Subject about cooperation opportunities..."
-        />
-      </motion.div>
+        <motion.div className="col-12" variants={fieldVariants} custom={2}>
+          <label htmlFor="subject" className="form-label small text-muted-soft">
+            Subject <span className="text-danger">*</span>
+          </label>
+          <input
+            type="text"
+            id="subject"
+            required
+            value={subject}
+            onChange={(e) => setSubject(e.target.value)}
+            className="form-control form-control-glass"
+            placeholder="Let's work together"
+          />
+        </motion.div>
 
-      <motion.div variants={ inputVariants } custom={ 3 }>
-        <label htmlFor="message" className="block text-sm font-medium text-zinc-700 mb-1.5">
-          Message <span className="text-red-400">*</span>
-        </label>
-        <textarea
-          id="message"
-          name="message"
-          rows={ 4 }
-          required
-          value={ message }
-          onChange={ (e) => setMessage(e.target.value) }
-          className={ `${inputBaseClasses} ${inputBgFocusClasses}` }
-          placeholder="Your detailed message here..."
-        ></textarea>
-      </motion.div>
+        <motion.div className="col-12" variants={fieldVariants} custom={3}>
+          <label htmlFor="message" className="form-label small text-muted-soft">
+            Message <span className="text-danger">*</span>
+          </label>
+          <textarea
+            id="message"
+            rows={4}
+            required
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            className="form-control form-control-glass"
+            placeholder="Your message..."
+          />
+        </motion.div>
 
-      <div className="absolute w-0 h-0 overflow-hidden">
-        <label htmlFor="honeypot">Do not fill this if you are human</label>
-        <input
-          type="text"
-          name="honeypot"
-          id="honeypot"
-          tabIndex={ -1 }
-          autoComplete="off"
-          value={ honeypot }
-          onChange={ (e) => setHoneypot(e.target.value) }
-        />
+        {/* Honeypot field, hidden from humans */}
+        <div className="visually-hidden" aria-hidden="true">
+          <label htmlFor="honeypot">Do not fill this if you are human</label>
+          <input
+            type="text"
+            id="honeypot"
+            tabIndex={-1}
+            autoComplete="off"
+            value={honeypot}
+            onChange={(e) => setHoneypot(e.target.value)}
+          />
+        </div>
+
+        <motion.div className="col-12" variants={fieldVariants} custom={4}>
+          <button
+            type="submit"
+            disabled={formState.status === "loading" || !WEB3FORMS_ACCESS_KEY}
+            className="btn btn-gradient w-100 py-2 rounded-3 d-inline-flex align-items-center justify-content-center gap-2"
+          >
+            {formState.status === "loading" ? <FiLoader className="spinner-border border-0" /> : <FiSend />}
+            Send message
+          </button>
+        </motion.div>
       </div>
 
-      <motion.div variants={ inputVariants } custom={ 4 }>
-        <button
-          type="submit"
-          disabled={ formState.status === "loading" || !WEB3FORMS_ACCESS_KEY }
-          className="w-full inline-flex items-center justify-center px-6 py-3 border border-transparent rounded-lg shadow-sm text-base font-semibold text-white
-          bg-blue-800
-          hover:bg-blue-400
-          focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-zinc-800
-          focus:ring-teal-400 disabled:opacity-60 disabled:cursor-not-allowed transition-all duration-300
-          group transform hover:scale-[1.02]"
-        >
-          { formState.status === "loading" && <FiLoader className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" /> }
-          { formState.status !== "loading" && <FiSend size={ 18 } className="-ml-1 mr-2.5 h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" /> }
-          Send Message
-        </button>
-      </motion.div>
-
-      { formState.message && (
+      {formState.message && (
         <motion.div
-          initial={ { opacity: 0, y: 10 } }
-          animate={ { opacity: 1, y: 0 } }
-          className={ `mt-4 p-3 rounded-md text-sm flex items-center shadow
-            ${formState.status === "success" ? "bg-green-500 bg-opacity-25 text-green-300 border border-green-500/50" :
-              formState.status === "error" ? "bg-red-500 bg-opacity-25 text-red-300 border border-red-500/50" : ""
-            }` }
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className={`alert mt-3 mb-0 d-flex align-items-center gap-2 small ${
+            formState.status === "success" ? "alert-success" : "alert-danger"
+          }`}
+          role="status"
         >
-          { formState.status === "success" && <FiCheckCircle className="mr-2 h-5 w-5 flex-shrink-0" /> }
-          { formState.status === "error" && <FiAlertTriangle className="mr-2 h-5 w-5 flex-shrink-0" /> }
-          { formState.message }
+          {formState.status === "success" ? <FiCheckCircle /> : <FiAlertTriangle />}
+          {formState.message}
         </motion.div>
-      ) }
+      )}
     </motion.form>
   );
 }
