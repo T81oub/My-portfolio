@@ -1,34 +1,34 @@
 "use client";
 
+import React, { useEffect, useRef, useState } from "react";
 import { useChat } from "ai/react";
 import Markdown from "react-markdown";
-import React, { useState, useEffect, useMemo } from "react";
 import { useSearchParams } from "next/navigation";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
-import { SendIcon, SquareIcon } from "lucide-react";
-
+import { ArrowUp, Square } from "lucide-react";
 import ToolRenderer from "./chat/render";
 import { eventBus } from "./ui/eventBus";
 import portfolio from "@/portfolio.config";
 
+const suggestions = [
+  "Tell me more about yourself.",
+  "What are your projects?",
+  "What are your skills?",
+  "Can I see your resume?",
+];
+
+const initial = portfolio.profile.shortName.charAt(0).toUpperCase();
+
 export function Chatbot() {
-  const {
-    messages,
-    input,
-    handleInputChange,
-    handleSubmit,
-    isLoading,
-    stop,
-    append,
-  } = useChat({ api: "/api/chat" });
+  const { messages, input, handleInputChange, handleSubmit, isLoading, stop, append } = useChat({
+    api: "/api/chat",
+  });
 
   const searchParams = useSearchParams();
   const initialMessage = searchParams.get("message");
   const [hasSentInitial, setHasSentInitial] = useState(false);
-  
-  // Messages sent from the header while already on /chatbot
+  const bottomRef = useRef<HTMLDivElement>(null);
+
+  // Messages sent from the navigation dock while already on /chatbot
   useEffect(() => {
     function handleNewMessage(message: string) {
       append({ role: "user", content: message });
@@ -43,13 +43,15 @@ export function Chatbot() {
   // Automatically send the message passed in the URL (?message=...)
   useEffect(() => {
     if (initialMessage && !hasSentInitial) {
-      append({
-        role: "user",
-        content: initialMessage,
-      });
+      append({ role: "user", content: initialMessage });
       setHasSentInitial(true);
     }
   }, [initialMessage, hasSentInitial, append]);
+
+  // Keep the latest message in view
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
+  }, [messages, isLoading]);
 
   const handleUserSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -57,123 +59,100 @@ export function Chatbot() {
     handleSubmit(e);
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      e.currentTarget.form?.requestSubmit();
-    }
-  };
-
-  const displayMessages = useMemo(() => {
-    const userMessages = messages.filter((m) => m.role === "user");
-    const assistantMessages = messages.filter((m) => m.role === "assistant");
-
-    const lastUser = userMessages[userMessages.length - 1];
-    const lastAssistant = assistantMessages[assistantMessages.length - 1];
-
-    const output = [];
-
-    if (lastUser) output.push(lastUser);
-    if (lastAssistant) output.push(lastAssistant);
-
-    return output;
-  }, [messages]);
+  const waitingForReply = isLoading && messages[messages.length - 1]?.role === "user";
 
   return (
-    <div className="flex flex-col h-full w-full mx-auto bg-background max-h-[810px] max-w-[1150px] min-h-full overflow-hidden">
-      <div className="flex-1 overflow-auto p-6 ">
+    <div className="chat-shell">
+      <div className="chat-scroll">
         {messages.length === 0 && (
-          <div className="flex flex-col justify-center items-center h-full">
-            <Avatar className="w-8 h-8 border">
-              <AvatarFallback>{portfolio.profile.shortName.charAt(0)}</AvatarFallback>
-            </Avatar>
-            <p className="text-lg text-muted-foreground mt-4">
-              {portfolio.chatbot.welcomeMessage}
-            </p>
+          <div className="h-100 d-flex flex-column align-items-center justify-content-center text-center px-3">
+            <div className="chat-avatar mb-3" style={{ width: "3.5rem", height: "3.5rem", fontSize: "1.25rem" }}>
+              {initial}
+            </div>
+            <h2 className="h4 section-title">{portfolio.chatbot.welcomeMessage}</h2>
+            <p className="text-muted-soft mb-4">Pick a question below or type your own.</p>
+            <div className="d-flex flex-wrap justify-content-center gap-2" style={{ maxWidth: 560 }}>
+              {suggestions.map((s) => (
+                <button
+                  key={s}
+                  type="button"
+                  className="btn btn-glass btn-sm suggestion"
+                  onClick={() => append({ role: "user", content: s })}
+                >
+                  {s}
+                </button>
+              ))}
+            </div>
           </div>
         )}
 
-        <div className="flex flex-col gap-4 overflow-hidden">
-          {displayMessages.map((message) => {
-            if (
-              message.role === "assistant" &&
-              Array.isArray(message.toolInvocations) &&
-              message.toolInvocations.length > 0
-            ) {
-              return (
-                <div key={message.id} className="bg-muted rounded-lg w-full">
-                  <div className="rounded-lg p-3 w-full max-w-full bg-white">
-                      <Markdown>{message.content}</Markdown>
-                  </div>
-                  <ToolRenderer
-                    toolInvocations={message.toolInvocations ?? []}
-                    messageId={message.id}
-                  />
-
-                </div>
-                
-              );
-            }
-
-            if (message.role === "assistant") {
-              return (
-                <div key={message.id} className="rounded-lg p-3 w-full max-w-full">
-                  <Markdown>{message.content}</Markdown>
-                </div>
-              );
-            }
-
+        <div className="d-flex flex-column gap-4">
+          {messages.map((message) => {
             if (message.role === "user") {
               return (
-                <div key={message.id} className="flex justify-end">
-                  <div className="bg-blue-600 rounded-lg p-3 max-w-[70%] text-white">
-                    <p className="text-sm">{message.content}</p>
-                  </div>
+                <div key={message.id} className="d-flex">
+                  <div className="bubble bubble-user">{message.content}</div>
                 </div>
               );
             }
 
-            return null;
+            if (message.role !== "assistant") return null;
+
+            const hasTools = Array.isArray(message.toolInvocations) && message.toolInvocations.length > 0;
+
+            return (
+              <div key={message.id} className="d-flex gap-3 align-items-start">
+                <div className="chat-avatar">{initial}</div>
+                <div className="flex-grow-1 min-w-0 d-flex flex-column gap-3">
+                  {message.content && (
+                    <div className="bubble bubble-ai chat-markdown">
+                      <Markdown>{message.content}</Markdown>
+                    </div>
+                  )}
+                  {hasTools && <ToolRenderer toolInvocations={message.toolInvocations ?? []} />}
+                </div>
+              </div>
+            );
           })}
+
+          {waitingForReply && (
+            <div className="d-flex gap-3 align-items-center">
+              <div className="chat-avatar">{initial}</div>
+              <div className="bubble bubble-ai">
+                <span className="typing-dots" aria-label="Typing">
+                  <span />
+                  <span />
+                  <span />
+                </span>
+              </div>
+            </div>
+          )}
+          <div ref={bottomRef} />
         </div>
       </div>
 
-      <form
-        onSubmit={handleUserSubmit}
-        className="px-4 py-3 sm:px-1 flex items-center gap-2 "
-      >
-        <div className="relative flex-1">
-          <Textarea
-            placeholder="Ask me anything..."
-            className="rounded-lg pr-12 min-h-[64px]"
-            rows={1}
-            value={input}
-            onChange={handleInputChange}
-            onKeyDown={handleKeyDown}
-          />
-
-          {!isLoading ? (
-            <Button
-              type="submit"
-              size="icon"
-              disabled={!input?.trim() || isLoading}
-              className="absolute bottom-3 right-3 rounded-full bg-blue-600 hover:bg-blue-700 text-white"
-            >
-              <SendIcon className="w-5 h-5" />
-              <span className="sr-only">Send</span>
-            </Button>
-          ) : (
-            <Button
-              type="button"
-              size="icon"
-              onClick={stop}
-              className="absolute bottom-3 right-3 rounded-full bg-blue-600 hover:bg-blue-700 text-white"
-            >
-              <SquareIcon className="w-5 h-5" />
-              <span className="sr-only">Stop</span>
-            </Button>
-          )}
-        </div>
+      <form onSubmit={handleUserSubmit} className="prompt-box mt-3">
+        <input
+          type="text"
+          placeholder="Ask me anything..."
+          value={input}
+          onChange={handleInputChange}
+          aria-label="Message"
+        />
+        {isLoading ? (
+          <button type="button" onClick={stop} className="btn btn-glass btn-icon flex-shrink-0" aria-label="Stop">
+            <Square size={16} />
+          </button>
+        ) : (
+          <button
+            type="submit"
+            disabled={!input.trim()}
+            className="btn btn-gradient btn-icon flex-shrink-0"
+            aria-label="Send"
+          >
+            <ArrowUp size={20} />
+          </button>
+        )}
       </form>
     </div>
   );

@@ -13,87 +13,46 @@ interface ToolRendererProps {
     toolName: string;
     result?: unknown;
   }>;
-  messageId: string;
 }
+
+/** Maps each tool the model calls to the UI section it should display. */
+const toolComponents: Record<string, React.ComponentType | null> = {
+  getWorkExperiences: WorkExperiences,
+  getProjects: Projects,
+  getSkills: Skills,
+  getEducation: Education,
+  getCV: Resume,
+  getAboutMe: AboutMe,
+  getContact: Contact,
+  // The assistant's text answer is enough here
+  getHelp: null,
+};
 
 export default function ToolRenderer({ toolInvocations }: ToolRendererProps) {
   return (
-    <div className="w-full transition-all duration-300">
+    <div className="d-flex flex-column gap-3">
       {toolInvocations.map(({ toolCallId, toolName, result }) => {
-        switch (toolName) {
-          case "getWorkExperiences":
-            return (
-              <div key={toolCallId} className="w-full rounded-lg overflow-hidden">
-                <WorkExperiences />
-              </div>
-            );
-
-          case "getProjects":
-            return (
-              <div key={toolCallId} className="w-full rounded-lg overflow-hidden">
-                <Projects />
-              </div>
-            );
-          case "getSkills":
-            return (
-              <div key={toolCallId} className="w-full rounded-lg overflow-hidden">
-                <Skills />
-              </div>
-            );
-          case "getEducation":
-            return (
-              <div key={toolCallId} className="w-full rounded-lg overflow-hidden">
-                <Education />
-              </div>
-            );
-          case "getCV":
-            return (
-              <div key={toolCallId} className="w-full rounded-lg overflow-hidden">
-                <Resume />
-              </div>
-            );
-          case "getAboutMe":
-            return (
-              <div key={toolCallId} className="w-full rounded-lg overflow-hidden">
-                <AboutMe />
-              </div>
-            );
-         
-          case "getContact":
-            return (
-              <div key={toolCallId} className="w-full rounded-lg overflow-hidden">
-                <Contact />
-              </div>
-            );
-          case "getHelp":
-            // The assistant's text answer is enough here
-            return null;
-
-          default:
-            // Fallback: render the raw result nicely
-            return (
-              <div
-                key={toolCallId}
-                className="bg-secondary/10 w-full rounded-lg p-4"
-              >
-                <div className="mb-2 flex items-center justify-between">
-                  <h3 className="text-lg font-medium">{toolName}</h3>
-                  <span className="rounded-full bg-green-100 px-2 py-0.5 text-xs text-green-800 dark:bg-green-900 dark:text-green-100">
-                    Tool Result
-                  </span>
-                </div>
-                <div className="mt-2">
-                  {typeof result === "object" ? (
-                    <pre className="bg-secondary/20 overflow-x-auto rounded p-3 text-sm">
-                      {JSON.stringify(result, null, 2)}
-                    </pre>
-                  ) : (
-                    <p>{String(result)}</p>
-                  )}
-                </div>
-              </div>
-            );
+        if (toolName in toolComponents) {
+          const Component = toolComponents[toolName];
+          return Component ? (
+            <div key={toolCallId} className="tool-panel">
+              <Component />
+            </div>
+          ) : null;
         }
+
+        // Fallback for unknown tools: show the raw result
+        return (
+          <div key={toolCallId} className="tool-panel">
+            <div className="d-flex justify-content-between align-items-center mb-2">
+              <h3 className="h6 mb-0">{toolName}</h3>
+              <span className="badge rounded-pill text-bg-success">Tool result</span>
+            </div>
+            <pre className="small mb-0">
+              {typeof result === "object" ? JSON.stringify(result, null, 2) : String(result)}
+            </pre>
+          </div>
+        );
       })}
     </div>
   );
