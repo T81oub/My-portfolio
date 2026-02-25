@@ -78,6 +78,10 @@ export interface Project {
   liveDemoUrl?: string;
 }
 
+export type ThemeMode = "light" | "dark";
+export type FontStyle = "sans" | "serif" | "mono";
+export type TextSize = "sm" | "md" | "lg";
+
 export interface PortfolioConfig {
   site: {
     /** Browser tab title */
@@ -114,6 +118,12 @@ export interface PortfolioConfig {
   experience: WorkExperience[];
   education: Education[];
   projects: Project[];
+  /** Defaults for the appearance menu. Visitors can change them and their choice is remembered. */
+  appearance: {
+    defaultTheme: ThemeMode;
+    defaultFont: FontStyle;
+    defaultTextSize: TextSize;
+  };
   chatbot: {
     /** Message shown before the visitor sends anything */
     welcomeMessage: string;

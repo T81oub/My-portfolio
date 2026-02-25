@@ -173,6 +173,12 @@ const portfolio: PortfolioConfig = {
     },
   ],
 
+  appearance: {
+    defaultTheme: "light", // "light" | "dark"
+    defaultFont: "sans", // "sans" | "serif" | "mono"
+    defaultTextSize: "md", // "sm" | "md" | "lg"
+  },
+
   chatbot: {
     welcomeMessage: "Hi! Ask me anything about my work, projects or skills.",
     tone: "Warm, friendly and professional. Short, natural sentences. Light use of emojis is fine.",

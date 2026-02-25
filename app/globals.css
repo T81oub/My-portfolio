@@ -1,34 +1,124 @@
 /*
  * Theme layer on top of Bootstrap 5.
- * Colors are defined once here; components only use Bootstrap utilities
- * plus the small set of classes below.
+ * Brand color: a single solid blue (--brand). Light is the default theme; dark mode uses Bootstrap's data-bs-theme="dark".
+ * Components only use Bootstrap utilities plus the small set of classes below.
  */
 
+/* ---------- Design tokens ---------- */
+
 :root,
+[data-bs-theme="light"] {
+  --brand: #2563eb;
+  --brand-hover: #1d4ed8;
+  --brand-rgb: 37, 99, 235;
+  --accent-text: #2563eb;
+
+  --surface: #ffffff;
+  --surface-strong: #eef0f8;
+  --surface-border: rgba(15, 23, 42, 0.08);
+  --surface-shadow: 0 10px 30px -18px rgba(15, 23, 42, 0.25);
+  --muted: #5b6178;
+  --placeholder: #8a8fa8;
+
+  --chip-color: #1d4ed8;
+  --chip-bg: rgba(37, 99, 235, 0.07);
+  --chip-border: rgba(37, 99, 235, 0.2);
+
+  --dock-bg: rgba(255, 255, 255, 0.8);
+  --dock-color: #4b5068;
+  --tooltip-bg: #1a1d2e;
+  --tooltip-color: #ffffff;
+  --overlay-bg: #ffffff;
+  --input-bg: #ffffff;
+  --skill-icon-bg: #f3f4fa;
+  --timeline-ring: #f7f8fc;
+
+  --glow-1: rgba(37, 99, 235, 0.1);
+  --glow-2: rgba(14, 165, 233, 0.08);
+  --glow-3: rgba(37, 99, 235, 0.06);
+
+  --bs-body-bg: #f7f8fc;
+  --bs-body-color: #1a1d2e;
+  --bs-emphasis-color: #0b0d17;
+  --bs-secondary-color: var(--muted);
+  --bs-border-color: var(--surface-border);
+  --bs-primary: #2563eb;
+  --bs-primary-rgb: 37, 99, 235;
+  --bs-link-color: #2563eb;
+  --bs-link-color-rgb: 37, 99, 235;
+  --bs-link-hover-color: #1d4ed8;
+  --bs-link-hover-color-rgb: 29, 78, 216;
+}
+
 [data-bs-theme="dark"] {
-  --accent-1: #6366f1;
-  --accent-2: #a855f7;
-  --accent-3: #ec4899;
-  --accent-gradient: linear-gradient(135deg, var(--accent-1) 0%, var(--accent-2) 55%, var(--accent-3) 100%);
+  --brand: #3b82f6;
+  --brand-hover: #2563eb;
+  --brand-rgb: 59, 130, 246;
+  --accent-text: #93c5fd;
 
   --surface: rgba(255, 255, 255, 0.035);
-  --surface-strong: rgba(255, 255, 255, 0.07);
+  --surface-strong: rgba(255, 255, 255, 0.08);
   --surface-border: rgba(255, 255, 255, 0.09);
+  --surface-shadow: none;
   --muted: #9aa0b8;
+  --placeholder: #6b7089;
+
+  --chip-color: #bfdbfe;
+  --chip-bg: rgba(59, 130, 246, 0.12);
+  --chip-border: rgba(59, 130, 246, 0.28);
+
+  --dock-bg: rgba(15, 17, 30, 0.7);
+  --dock-color: #c3c7d9;
+  --tooltip-bg: #1c1f33;
+  --tooltip-color: #ffffff;
+  --overlay-bg: #0f1120;
+  --input-bg: rgba(255, 255, 255, 0.04);
+  --skill-icon-bg: rgba(255, 255, 255, 0.92);
+  --timeline-ring: #07080f;
+
+  --glow-1: rgba(59, 130, 246, 0.16);
+  --glow-2: rgba(14, 165, 233, 0.1);
+  --glow-3: rgba(59, 130, 246, 0.08);
 
   --bs-body-bg: #07080f;
   --bs-body-color: #e7e9f3;
+  --bs-emphasis-color: #ffffff;
+  --bs-secondary-color: var(--muted);
+  --bs-border-color: var(--surface-border);
+  --bs-primary: #3b82f6;
+  --bs-primary-rgb: 59, 130, 246;
+  --bs-link-color: #93c5fd;
+  --bs-link-color-rgb: 147, 197, 253;
+  --bs-link-hover-color: #bfdbfe;
+  --bs-link-hover-color-rgb: 191, 219, 254;
+}
+
+/* ---------- Text format options (set on <html>) ---------- */
+
+:root,
+[data-font="sans"] {
   --bs-body-font-family: var(--font-geist-sans), system-ui, -apple-system, "Segoe UI", sans-serif;
   --bs-font-monospace: var(--font-geist-mono), ui-monospace, monospace;
-  --bs-primary: #6366f1;
-  --bs-primary-rgb: 99, 102, 241;
-  --bs-link-color: #a5b4fc;
-  --bs-link-color-rgb: 165, 180, 252;
-  --bs-link-hover-color: #c7d2fe;
-  --bs-link-hover-color-rgb: 199, 210, 254;
-  --bs-border-color: var(--surface-border);
-  --bs-secondary-color: var(--muted);
-  --bs-emphasis-color: #ffffff;
+}
+
+[data-font="serif"] {
+  --bs-body-font-family: var(--font-serif), Georgia, "Times New Roman", serif;
+}
+
+[data-font="mono"] {
+  --bs-body-font-family: var(--font-geist-mono), ui-monospace, monospace;
+}
+
+html[data-text-size="sm"] {
+  font-size: 14px;
+}
+
+html[data-text-size="md"] {
+  font-size: 16px;
+}
+
+html[data-text-size="lg"] {
+  font-size: 18px;
 }
 
 /* ---------- Base ---------- */
@@ -41,6 +131,7 @@ body {
   min-height: 100vh;
   background-color: var(--bs-body-bg);
   -webkit-font-smoothing: antialiased;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 body::before {
@@ -50,24 +141,26 @@ body::before {
   z-index: -1;
   pointer-events: none;
   background:
-    radial-gradient(40rem 40rem at 10% -10%, rgba(99, 102, 241, 0.18), transparent 60%),
-    radial-gradient(35rem 35rem at 100% 10%, rgba(168, 85, 247, 0.14), transparent 60%),
-    radial-gradient(30rem 30rem at 50% 110%, rgba(236, 72, 153, 0.1), transparent 60%);
+    radial-gradient(40rem 40rem at 10% -10%, var(--glow-1), transparent 60%),
+    radial-gradient(35rem 35rem at 100% 10%, var(--glow-2), transparent 60%),
+    radial-gradient(30rem 30rem at 50% 110%, var(--glow-3), transparent 60%);
 }
 
 ::selection {
-  background: rgba(168, 85, 247, 0.4);
+  color: #fff;
+  background: rgba(var(--brand-rgb), 0.6);
 }
 
 .text-muted-soft {
   color: var(--muted) !important;
 }
 
-.text-gradient {
-  background: var(--accent-gradient);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+.text-accent {
+  color: var(--accent-text) !important;
+}
+
+.text-brand {
+  color: var(--brand) !important;
 }
 
 .eyebrow {
@@ -75,7 +168,7 @@ body::before {
   font-weight: 600;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: #a5b4fc;
+  color: var(--accent-text);
 }
 
 .section-title {
@@ -83,42 +176,55 @@ body::before {
   letter-spacing: -0.02em;
 }
 
+.min-w-0 {
+  min-width: 0;
+}
+
 /* ---------- Buttons ---------- */
 
-.btn-gradient {
+.btn-brand {
   --bs-btn-color: #fff;
   --bs-btn-hover-color: #fff;
   --bs-btn-active-color: #fff;
-  --bs-btn-disabled-color: rgba(255, 255, 255, 0.7);
+  --bs-btn-disabled-color: rgba(255, 255, 255, 0.8);
   --bs-btn-border-width: 0;
-  background: var(--accent-gradient);
-  box-shadow: 0 8px 24px -8px rgba(139, 92, 246, 0.6);
-  transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+  --bs-btn-bg: var(--brand);
+  --bs-btn-hover-bg: var(--brand-hover);
+  --bs-btn-active-bg: var(--brand-hover);
+  --bs-btn-disabled-bg: var(--brand);
+  box-shadow: 0 8px 24px -10px rgba(var(--brand-rgb), 0.7);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
 }
 
-.btn-gradient:hover,
-.btn-gradient:focus-visible {
+.btn-brand:hover,
+.btn-brand:focus-visible {
   transform: translateY(-1px);
-  filter: brightness(1.08);
-  box-shadow: 0 12px 30px -8px rgba(139, 92, 246, 0.75);
+  box-shadow: 0 12px 30px -10px rgba(var(--brand-rgb), 0.8);
 }
 
-.btn-gradient:disabled {
+.btn-brand:disabled {
   opacity: 0.5;
   box-shadow: none;
 }
 
 .btn-glass {
   --bs-btn-color: var(--bs-body-color);
-  --bs-btn-hover-color: #fff;
-  --bs-btn-active-color: #fff;
+  --bs-btn-hover-color: var(--bs-emphasis-color);
+  --bs-btn-active-color: var(--bs-emphasis-color);
   --bs-btn-bg: var(--surface);
   --bs-btn-hover-bg: var(--surface-strong);
   --bs-btn-active-bg: var(--surface-strong);
   --bs-btn-border-color: var(--surface-border);
-  --bs-btn-hover-border-color: rgba(255, 255, 255, 0.2);
-  --bs-btn-active-border-color: rgba(255, 255, 255, 0.2);
+  --bs-btn-hover-border-color: var(--surface-border);
+  --bs-btn-active-border-color: var(--surface-border);
+  box-shadow: var(--surface-shadow);
   backdrop-filter: blur(8px);
+}
+
+.btn-check:checked + .btn-glass {
+  color: #fff;
+  border-color: transparent;
+  background: var(--brand);
 }
 
 .btn-icon {
@@ -137,6 +243,7 @@ body::before {
   background: var(--surface);
   border: 1px solid var(--surface-border);
   border-radius: 1.25rem;
+  box-shadow: var(--surface-shadow);
   backdrop-filter: blur(12px);
 }
 
@@ -146,8 +253,8 @@ body::before {
 
 .hover-lift:hover {
   transform: translateY(-4px);
-  border-color: rgba(165, 180, 252, 0.35);
-  box-shadow: 0 20px 40px -20px rgba(99, 102, 241, 0.5);
+  border-color: rgba(var(--brand-rgb), 0.35);
+  box-shadow: 0 20px 40px -20px rgba(var(--brand-rgb), 0.5);
 }
 
 .chip {
@@ -158,9 +265,15 @@ body::before {
   font-size: 0.75rem;
   font-weight: 500;
   border-radius: 999px;
-  color: #c7d2fe;
-  background: rgba(99, 102, 241, 0.12);
-  border: 1px solid rgba(99, 102, 241, 0.25);
+  color: var(--chip-color);
+  background: var(--chip-bg);
+  border: 1px solid var(--chip-border);
+}
+
+.chip-solid {
+  color: #fff;
+  background: rgba(15, 17, 30, 0.75);
+  border-color: transparent;
 }
 
 .status-dot {
@@ -219,10 +332,10 @@ body::before {
   gap: 0.25rem;
   padding: 0.4rem;
   border-radius: 999px;
-  background: rgba(15, 17, 30, 0.7);
+  background: var(--dock-bg);
   border: 1px solid var(--surface-border);
   backdrop-filter: blur(16px);
-  box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 10px 40px -12px rgba(15, 23, 42, 0.35);
 }
 
 .dock-btn {
@@ -234,21 +347,21 @@ body::before {
   justify-content: center;
   border: 0;
   border-radius: 50%;
-  color: #c3c7d9;
+  color: var(--dock-color);
   background: transparent;
   transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
 }
 
 .dock-btn:hover,
 .dock-btn:focus-visible {
-  color: #fff;
+  color: var(--bs-emphasis-color);
   background: var(--surface-strong);
   transform: translateY(-2px);
 }
 
 .dock-btn.active {
   color: #fff;
-  background: var(--accent-gradient);
+  background: var(--brand);
 }
 
 .dock-btn[data-label]::after {
@@ -260,9 +373,8 @@ body::before {
   padding: 0.3rem 0.6rem;
   font-size: 0.72rem;
   white-space: nowrap;
-  color: #fff;
-  background: #1c1f33;
-  border: 1px solid var(--surface-border);
+  color: var(--tooltip-color);
+  background: var(--tooltip-bg);
   border-radius: 0.5rem;
   opacity: 0;
   pointer-events: none;
@@ -275,14 +387,28 @@ body::before {
   transform: translateX(-50%) translateY(0);
 }
 
-.help-btn {
+.top-actions {
   position: fixed;
   top: 1rem;
   right: 1.25rem;
-  z-index: 1030;
+  z-index: 1040;
+  display: flex;
+  gap: 0.5rem;
 }
 
-@media (max-width: 575.98px) {
+.appearance-menu {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  right: 0;
+  width: 17rem;
+  padding: 1rem;
+  border-radius: 1rem;
+  background: var(--overlay-bg);
+  border: 1px solid var(--surface-border);
+  box-shadow: 0 20px 50px -15px rgba(15, 23, 42, 0.4);
+}
+
+@media (max-width: 767.98px) {
   .nav-dock {
     top: auto;
     bottom: 1rem;
@@ -301,14 +427,13 @@ body::before {
 /* ---------- Modal (rendered without Bootstrap JS) ---------- */
 
 .modal-glass .modal-content {
-  background: #0f1120;
+  background: var(--overlay-bg);
   border: 1px solid var(--surface-border);
   border-radius: 1.25rem;
 }
 
 .modal-backdrop.show {
-  opacity: 0.7;
-  backdrop-filter: blur(4px);
+  opacity: 0.6;
 }
 
 /* ---------- Hero ---------- */
@@ -316,7 +441,7 @@ body::before {
 .hero {
   min-height: 100vh;
   padding-top: 7rem;
-  padding-bottom: 4rem;
+  padding-bottom: 6rem;
 }
 
 .hero-title {
@@ -346,7 +471,7 @@ body::before {
   height: 1em;
   margin-left: 3px;
   vertical-align: -0.12em;
-  background: #a5b4fc;
+  background: var(--accent-text);
   animation: blink 1s steps(1) infinite;
 }
 
@@ -362,13 +487,14 @@ body::before {
   border-radius: 999px;
   background: var(--surface);
   border: 1px solid var(--surface-border);
+  box-shadow: var(--surface-shadow);
   backdrop-filter: blur(12px);
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .prompt-box:focus-within {
-  border-color: rgba(165, 180, 252, 0.5);
-  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15);
+  border-color: rgba(var(--brand-rgb), 0.5);
+  box-shadow: 0 0 0 4px rgba(var(--brand-rgb), 0.15);
 }
 
 .prompt-box input {
@@ -381,7 +507,7 @@ body::before {
 }
 
 .prompt-box input::placeholder {
-  color: var(--muted);
+  color: var(--placeholder);
 }
 
 /* ---------- Forms ---------- */
@@ -389,18 +515,18 @@ body::before {
 .form-control-glass,
 .form-control-glass:focus {
   color: var(--bs-body-color);
-  background: rgba(255, 255, 255, 0.04);
+  background: var(--input-bg);
   border: 1px solid var(--surface-border);
   border-radius: 0.75rem;
 }
 
 .form-control-glass:focus {
-  border-color: rgba(165, 180, 252, 0.6);
-  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15);
+  border-color: rgba(var(--brand-rgb), 0.6);
+  box-shadow: 0 0 0 4px rgba(var(--brand-rgb), 0.15);
 }
 
 .form-control-glass::placeholder {
-  color: #6b7089;
+  color: var(--placeholder);
 }
 
 /* ---------- About ---------- */
@@ -409,7 +535,7 @@ body::before {
   position: relative;
   padding: 3px;
   border-radius: 1.5rem;
-  background: var(--accent-gradient);
+  background: var(--brand);
 }
 
 .profile-frame .profile-inner {
@@ -417,7 +543,7 @@ body::before {
   aspect-ratio: 4 / 5;
   overflow: hidden;
   border-radius: calc(1.5rem - 3px);
-  background: #0f1120;
+  background: var(--surface-strong);
 }
 
 .profile-inner img {
@@ -442,7 +568,7 @@ body::before {
   bottom: 0.5rem;
   left: 0.85rem;
   width: 2px;
-  background: linear-gradient(to bottom, var(--accent-1), var(--accent-3), transparent);
+  background: linear-gradient(to bottom, var(--brand), rgba(var(--brand-rgb), 0.15));
 }
 
 .timeline-item {
@@ -460,8 +586,8 @@ body::before {
   justify-content: center;
   border-radius: 50%;
   color: #fff;
-  background: var(--accent-gradient);
-  box-shadow: 0 0 0 5px var(--bs-body-bg);
+  background: var(--brand);
+  box-shadow: 0 0 0 5px var(--timeline-ring);
 }
 
 /* ---------- Projects ---------- */
@@ -497,7 +623,6 @@ body::before {
   gap: 0.5rem;
   padding: 0.9rem 0.5rem;
   border-radius: 1rem;
-  background: rgba(255, 255, 255, 0.025);
   border: 1px solid transparent;
   transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
 }
@@ -515,7 +640,7 @@ body::before {
   align-items: center;
   justify-content: center;
   border-radius: 0.85rem;
-  background: rgba(255, 255, 255, 0.92);
+  background: var(--skill-icon-bg);
 }
 
 /* ---------- Chat ---------- */
@@ -529,7 +654,18 @@ body::before {
 .chat-shell {
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 7rem);
+  height: calc(100dvh - 7rem);
+}
+
+@media (max-width: 767.98px) {
+  .chat-page {
+    padding-top: 4.5rem;
+    padding-bottom: 5.5rem;
+  }
+
+  .chat-shell {
+    height: calc(100dvh - 10rem);
+  }
 }
 
 .chat-scroll {
@@ -537,7 +673,7 @@ body::before {
   overflow-y: auto;
   padding: 1rem 0.25rem;
   scrollbar-width: thin;
-  scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
+  scrollbar-color: var(--surface-border) transparent;
 }
 
 .bubble {
@@ -550,13 +686,14 @@ body::before {
 .bubble-user {
   margin-left: auto;
   color: #fff;
-  background: var(--accent-gradient);
+  background: var(--brand);
   border-bottom-right-radius: 0.35rem;
 }
 
 .bubble-ai {
   background: var(--surface);
   border: 1px solid var(--surface-border);
+  box-shadow: var(--surface-shadow);
   border-bottom-left-radius: 0.35rem;
 }
 
@@ -571,7 +708,7 @@ body::before {
   font-weight: 700;
   font-size: 0.85rem;
   color: #fff;
-  background: var(--accent-gradient);
+  background: var(--brand);
 }
 
 .chat-markdown > :last-child {
@@ -612,8 +749,13 @@ body::before {
 .tool-panel {
   padding: 1.25rem;
   border-radius: 1.25rem;
-  background: rgba(255, 255, 255, 0.02);
+  background: var(--surface);
   border: 1px solid var(--surface-border);
+  box-shadow: var(--surface-shadow);
+}
+
+.tool-panel .glass-card {
+  box-shadow: none;
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -15,6 +15,7 @@ import {
   X,
 } from "lucide-react";
 import { eventBus } from "./eventBus";
+import AppearanceControls from "./AppearanceControls";
 import portfolio from "@/portfolio.config";
 
 const navItems = [
@@ -49,7 +50,7 @@ export default function HeaderMenu() {
     <>
       {/* Brand */}
       <div className="brand-badge d-none d-lg-flex align-items-center gap-2">
-        <span className="text-gradient">{portfolio.site.brand}</span>
+        <span className="text-brand">{portfolio.site.brand}</span>
         <span className="status-dot" />
       </div>
 
@@ -78,15 +79,19 @@ export default function HeaderMenu() {
         ))}
       </nav>
 
-      {/* Help button */}
-      <button
-        type="button"
-        className="help-btn btn btn-glass btn-icon d-none d-sm-inline-flex"
-        aria-label="About this portfolio"
-        onClick={() => setShowHelp(true)}
-      >
-        <HelpCircle size={20} />
-      </button>
+      {/* Theme, text format and help */}
+      <div className="top-actions">
+        <AppearanceControls />
+        <button
+          type="button"
+          className="btn btn-glass btn-icon"
+          aria-label="About this portfolio"
+          title="About this portfolio"
+          onClick={() => setShowHelp(true)}
+        >
+          <HelpCircle size={20} />
+        </button>
+      </div>
 
       {/* Help modal */}
       {showHelp && (
@@ -117,7 +122,7 @@ export default function HeaderMenu() {
                     {helpItems.map(({ label, icon: Icon, help }) => (
                       <div key={label} className="col-sm-6 col-lg-4">
                         <div className="glass-card h-100 p-3 d-flex gap-3 align-items-start">
-                          <Icon size={20} className="flex-shrink-0 mt-1" color="#a5b4fc" />
+                          <Icon size={20} className="flex-shrink-0 mt-1 text-accent" />
                           <div>
                             <div className="fw-semibold">{label}</div>
                             <div className="small text-muted-soft">{help}</div>
