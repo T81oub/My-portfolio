@@ -39,7 +39,7 @@ export function HeroSection() {
             )}
 
             <h1 className="hero-title mb-3">
-              Hi, I&apos;m <span className="text-gradient">{profile.name}</span>{" "}
+              Hi, I&apos;m <span className="text-brand">{profile.name}</span>{" "}
               <span className="wave">👋</span>
             </h1>
 
@@ -53,7 +53,7 @@ export function HeroSection() {
           </FadeIn>
 
           <form onSubmit={handleSubmit} className="prompt-box mx-auto mt-5" style={{ maxWidth: 680 }}>
-            <Sparkles size={20} color="#a5b4fc" className="flex-shrink-0" />
+            <Sparkles size={20} className="flex-shrink-0 text-accent" />
             <input
               type="text"
               placeholder="Ask me something..."
@@ -61,7 +61,7 @@ export function HeroSection() {
               onChange={(e) => setMessage(e.target.value)}
               aria-label="Ask a question"
             />
-            <button type="submit" className="btn btn-gradient btn-icon flex-shrink-0" disabled={!message.trim()}>
+            <button type="submit" className="btn btn-brand btn-icon flex-shrink-0" disabled={!message.trim()}>
               <ArrowUp size={20} />
               <span className="visually-hidden">Send</span>
             </button>

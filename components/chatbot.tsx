@@ -147,7 +147,7 @@ export function Chatbot() {
           <button
             type="submit"
             disabled={!input.trim()}
-            className="btn btn-gradient btn-icon flex-shrink-0"
+            className="btn btn-brand btn-icon flex-shrink-0"
             aria-label="Send"
           >
             <ArrowUp size={20} />

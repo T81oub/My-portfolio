@@ -49,7 +49,7 @@ export function Resume() {
                 href={resume.file}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="btn btn-gradient d-inline-flex align-items-center gap-2"
+                className="btn btn-brand d-inline-flex align-items-center gap-2"
               >
                 <Eye size={18} />
                 View

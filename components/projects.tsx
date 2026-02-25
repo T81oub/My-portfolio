@@ -31,7 +31,7 @@ export function Projects() {
               key={category}
               type="button"
               onClick={() => setSelectedCategory(category)}
-              className={clsx("btn filter-btn", selectedCategory === category ? "btn-gradient" : "btn-glass")}
+              className={clsx("btn filter-btn", selectedCategory === category ? "btn-brand" : "btn-glass")}
             >
               {category}
             </button>

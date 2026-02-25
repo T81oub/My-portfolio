@@ -35,7 +35,7 @@ export function AnimatedTitle() {
 
   return (
     <span className="fw-semibold">
-      <span className="text-gradient">{text}</span>
+      <span className="text-brand">{text}</span>
       <span className="typing-caret" aria-hidden="true" />
     </span>
   );

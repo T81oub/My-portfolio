@@ -11,7 +11,7 @@ const { profile } = portfolio;
 function renderRichText(text: string) {
   return text.split(/(\*\*[^*]+\*\*)/g).map((part, i) =>
     part.startsWith("**") && part.endsWith("**") ? (
-      <strong key={i} className="text-gradient">
+      <strong key={i} className="text-brand">
         {part.slice(2, -2)}
       </strong>
     ) : (
@@ -57,7 +57,7 @@ export function AboutMe() {
               priority
             />
             {profile.openToWork && (
-              <span className="chip position-absolute bottom-0 start-0 m-3 bg-dark bg-opacity-75">
+              <span className="chip chip-solid position-absolute bottom-0 start-0 m-3">
                 <span className="status-dot" />
                 Available for work
               </span>

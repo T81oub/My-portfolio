@@ -170,7 +170,7 @@ export default function ContactForm() {
           <button
             type="submit"
             disabled={formState.status === "loading" || !WEB3FORMS_ACCESS_KEY}
-            className="btn btn-gradient w-100 py-2 rounded-3 d-inline-flex align-items-center justify-content-center gap-2"
+            className="btn btn-brand w-100 py-2 rounded-3 d-inline-flex align-items-center justify-content-center gap-2"
           >
             {formState.status === "loading" ? <FiLoader className="spinner-border border-0" /> : <FiSend />}
             Send message

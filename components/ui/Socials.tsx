@@ -36,7 +36,7 @@ export function Socials({ className }: { className?: string }) {
             <button
               type="button"
               onClick={() => setShowResume(true)}
-              className="btn btn-gradient rounded-pill px-4 d-inline-flex align-items-center gap-2 ms-1"
+              className="btn btn-brand rounded-pill px-4 d-inline-flex align-items-center gap-2 ms-1"
             >
               <FileText size={18} />
               View Resume

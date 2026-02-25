@@ -55,7 +55,7 @@ export function WorkExperiences() {
               <ul className="list-unstyled mb-0 d-grid gap-2">
                 {exp.highlights.map((item, i) => (
                   <li key={i} className="d-flex gap-2 small text-muted-soft">
-                    <Check size={16} className="flex-shrink-0 mt-1" color="#a5b4fc" />
+                    <Check size={16} className="flex-shrink-0 mt-1 text-accent" />
                     <span>{item}</span>
                   </li>
                 ))}

@@ -90,7 +90,7 @@ export default function ProjectCard({ project, index }: ProjectCardProps) {
                 href={project.liveDemoUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="btn btn-gradient btn-sm flex-fill d-inline-flex align-items-center justify-content-center gap-2"
+                className="btn btn-brand btn-sm flex-fill d-inline-flex align-items-center justify-content-center gap-2"
               >
                 <ExternalLink size={16} />
                 Live demo
