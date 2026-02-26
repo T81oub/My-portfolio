@@ -487,14 +487,16 @@ body::before {
   border-radius: 999px;
   background: var(--surface);
   border: 1px solid var(--surface-border);
-  box-shadow: var(--surface-shadow);
-  backdrop-filter: blur(12px);
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  transition: border-color 0.2s ease;
 }
 
 .prompt-box:focus-within {
   border-color: rgba(var(--brand-rgb), 0.5);
-  box-shadow: 0 0 0 4px rgba(var(--brand-rgb), 0.15);
+}
+
+.prompt-box .btn-brand,
+.prompt-box .btn-glass {
+  box-shadow: none;
 }
 
 .prompt-box input {
