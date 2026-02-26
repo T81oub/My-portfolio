@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import clsx from 'clsx';
 import { FileText, X } from 'lucide-react';
-import { FadeIn, FadeInStagger } from '@/components/ui/FadeIn';
 import { Resume } from '../resume';
 import portfolio from '@/portfolio.config';
 import { getSocialIcon } from '@/lib/icons';
@@ -13,11 +12,11 @@ export function Socials({ className }: { className?: string }) {
 
   return (
     <>
-      <FadeInStagger role="list" className={clsx('d-flex flex-wrap align-items-center gap-2', className)}>
-        {portfolio.socials.map((social) => {
+      <div className={clsx('d-flex flex-wrap align-items-center gap-2', className)}>
+        {portfolio.socials.map((social, i) => {
           const Icon = getSocialIcon(social.platform);
           return (
-            <FadeIn key={social.url}>
+            <div key={social.url} className="fade-in-up" style={{ animationDelay: `${0.3 + i * 0.1}s` }}>
               <a
                 href={social.url}
                 target="_blank"
@@ -27,12 +26,12 @@ export function Socials({ className }: { className?: string }) {
               >
                 <Icon size={18} />
               </a>
-            </FadeIn>
+            </div>
           );
         })}
 
         {portfolio.resumes.length > 0 && (
-          <FadeIn>
+          <div className="fade-in-up" style={{ animationDelay: `${0.3 + portfolio.socials.length * 0.1}s` }}>
             <button
               type="button"
               onClick={() => setShowResume(true)}
@@ -41,9 +40,9 @@ export function Socials({ className }: { className?: string }) {
               <FileText size={18} />
               View Resume
             </button>
-          </FadeIn>
+          </div>
         )}
-      </FadeInStagger>
+      </div>
 
       {showResume && (
         <>

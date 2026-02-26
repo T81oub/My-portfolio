@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowUp, Sparkles } from "lucide-react";
-import { FadeIn } from "@/components/ui/FadeIn";
 import { AnimatedTitle } from "@/components/ui/AnimatedTitle";
 import { Socials } from "@/components/ui/Socials";
 import portfolio from "@/portfolio.config";
@@ -30,7 +29,8 @@ export function HeroSection() {
     <section className="hero container d-flex flex-column justify-content-center">
       <div className="row justify-content-center">
         <div className="col-lg-10 col-xl-9 text-center">
-          <FadeIn>
+          {/* CSS animation: the text stays visible even if JavaScript fails to load */}
+          <div className="fade-in-up">
             {profile.openToWork && (
               <span className="chip mb-4">
                 <span className="status-dot" />
@@ -50,7 +50,7 @@ export function HeroSection() {
             <p className="lead text-muted-soft mx-auto mb-0" style={{ maxWidth: 620 }}>
               Skip the scrolling. Ask my AI assistant anything about my experience, projects and skills.
             </p>
-          </FadeIn>
+          </div>
 
           <form onSubmit={handleSubmit} className="prompt-box mx-auto mt-5" style={{ maxWidth: 680 }}>
             <Sparkles size={20} className="flex-shrink-0 text-accent" />
