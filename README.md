@@ -13,7 +13,7 @@ All of your content lives in a single configuration file.
 ![Next.js](https://img.shields.io/badge/Next.js_15-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)
 ![React](https://img.shields.io/badge/React_19-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
 ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
-![Tailwind CSS](https://img.shields.io/badge/Tailwind_v4-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)
+![Bootstrap](https://img.shields.io/badge/Bootstrap_5-7952B3?style=for-the-badge&logo=bootstrap&logoColor=white)
 ![OpenAI](https://img.shields.io/badge/OpenAI-412991?style=for-the-badge&logo=openai&logoColor=white)
 ![Vercel AI SDK](https://img.shields.io/badge/Vercel_AI_SDK-000000?style=for-the-badge&logo=vercel&logoColor=white)
 
@@ -35,7 +35,9 @@ All of your content lives in a single configuration file.
 - **Resume support.** Drop one or more PDFs in `public/resume/`. Visitors can view or download them.
 - **Working contact form.** Powered by [Web3Forms](https://web3forms.com), with honeypot spam protection.
 - **Streaming responses.** Answers stream token by token through the Vercel AI SDK.
-- **Animated UI.** Typewriter hero title, timeline views and smooth transitions with Framer Motion.
+- **Light and dark themes.** Built on Bootstrap 5 color modes. Visitors switch with one click and their choice is remembered.
+- **Text format options.** Visitors can pick the font (sans, serif or mono) and the text size (small, default or large).
+- **Modern, responsive UI.** Floating navigation dock, timeline views, typewriter hero title and smooth transitions with Framer Motion.
 - **No secrets in code.** API keys are read from environment variables only.
 
 ---
@@ -139,6 +141,20 @@ The full list is in [`lib/icons.tsx`](lib/icons.tsx). Skills without an icon get
 The system prompt is generated automatically from your config ([`app/api/chat/prompt.ts`](app/api/chat/prompt.ts)).
 Adjust `chatbot.tone`, `chatbot.welcomeMessage` and `chatbot.privateTopics` to change how the assistant talks.
 
+### 6. Set the default look
+
+Choose what first-time visitors see. They can still change it from the buttons in the top-right corner.
+
+```ts
+appearance: {
+  defaultTheme: "light",   // "light" | "dark"
+  defaultFont: "sans",     // "sans" | "serif" | "mono"
+  defaultTextSize: "md",   // "sm" | "md" | "lg"
+},
+```
+
+To change the accent color, edit `--brand` (and `--brand-rgb`) for each theme at the top of [`app/globals.css`](app/globals.css).
+
 ---
 
 ## How it works
@@ -171,16 +187,18 @@ flowchart LR
 │   │   ├── prompt.ts        System prompt generated from the config
 │   │   └── tools.ts         Tools the model can call
 │   ├── chatbot/page.tsx     Chat page
-│   ├── layout.tsx           Metadata and fonts
+│   ├── globals.css          Theme tokens (light/dark) on top of Bootstrap
+│   ├── layout.tsx           Metadata, fonts and saved appearance
 │   └── page.tsx             Landing page
 ├── components/
 │   ├── chat/render.tsx      Maps tool calls to UI components
 │   ├── chatbot.tsx          Chat interface
 │   ├── aboutme.tsx, projects.tsx, skills.tsx, education.tsx,
 │   │   workexperiences.tsx, resume.tsx, contact.tsx
-│   └── ui/                  Header, cards, contact form, animations
+│   └── ui/                  Navigation, appearance menu, contact form
 ├── lib/
 │   ├── types.ts             Config types
+│   ├── appearance.ts        Theme, font and text size handling
 │   └── icons.tsx            Skill and social icons
 └── public/
     ├── images/              Photo and project images
@@ -217,7 +235,7 @@ Any platform that supports Next.js (Netlify, Railway, a Docker container, etc.) 
 
 - [Next.js 15](https://nextjs.org) (App Router) and [React 19](https://react.dev)
 - [Vercel AI SDK](https://sdk.vercel.ai) with the OpenAI provider
-- [Tailwind CSS v4](https://tailwindcss.com) and [shadcn/ui](https://ui.shadcn.com) primitives
+- [Bootstrap 5](https://getbootstrap.com) with its built-in light and dark color modes
 - [Framer Motion](https://www.framer.com/motion/) for animations
 - [Web3Forms](https://web3forms.com) for the contact form
 
