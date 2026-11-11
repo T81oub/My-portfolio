@@ -22,7 +22,11 @@ function errorHandler(error: unknown) {
 export async function POST(req: Request) {
   if (!process.env.OPENAI_API_KEY) {
     console.error("[CHAT-API] OPENAI_API_KEY is not set. Add it to .env.local");
-    return new Response("Chat is not configured on this server.", { status: 500 });
+    return new Response(
+      "I can't answer yet: no AI model API key has been added. " +
+        "Add OPENAI_API_KEY to .env.local, then restart the server.",
+      { status: 503 }
+    );
   }
 
   try {

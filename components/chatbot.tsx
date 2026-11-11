@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useChat } from "ai/react";
 import Markdown from "react-markdown";
 import { useSearchParams } from "next/navigation";
-import { ArrowUp, Square } from "lucide-react";
+import { AlertTriangle, ArrowUp, Square } from "lucide-react";
 import ToolRenderer from "./chat/render";
 import { eventBus } from "./ui/eventBus";
 import portfolio from "@/portfolio.config";
@@ -19,7 +19,7 @@ const suggestions = [
 const initial = portfolio.profile.shortName.charAt(0).toUpperCase();
 
 export function Chatbot() {
-  const { messages, input, handleInputChange, handleSubmit, isLoading, stop, append } = useChat({
+  const { messages, input, handleInputChange, handleSubmit, isLoading, stop, append, error } = useChat({
     api: "/api/chat",
   });
 
@@ -51,7 +51,7 @@ export function Chatbot() {
   // Keep the latest message in view
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
-  }, [messages, isLoading]);
+  }, [messages, isLoading, error]);
 
   const handleUserSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -125,6 +125,15 @@ export function Chatbot() {
                   <span />
                 </span>
               </div>
+            </div>
+          )}
+
+          {error && !isLoading && (
+            <div className="d-flex gap-3 align-items-start" role="alert">
+              <div className="chat-avatar bg-danger">
+                <AlertTriangle size={15} />
+              </div>
+              <div className="bubble bubble-ai border-danger-subtle">{error.message || "Something went wrong."}</div>
             </div>
           )}
           <div ref={bottomRef} />
