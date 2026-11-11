@@ -17,13 +17,25 @@ All of your content lives in a single configuration file.
 ![OpenAI](https://img.shields.io/badge/OpenAI-412991?style=for-the-badge&logo=openai&logoColor=white)
 ![Vercel AI SDK](https://img.shields.io/badge/Vercel_AI_SDK-000000?style=for-the-badge&logo=vercel&logoColor=white)
 
+[Demo](#demo) &nbsp;&middot;&nbsp;
 [Features](#features) &nbsp;&middot;&nbsp;
+[Screenshots](#screenshots) &nbsp;&middot;&nbsp;
 [Quick start](#quick-start) &nbsp;&middot;&nbsp;
 [Customize](#make-it-yours) &nbsp;&middot;&nbsp;
 [How it works](#how-it-works) &nbsp;&middot;&nbsp;
 [Deploy](#deploy)
 
 </div>
+
+---
+
+## Demo
+
+<p align="center">
+  <img src="docs/demo.gif" alt="Demo: asking a question, the chat showing projects, switching to dark mode and changing the text format" width="900" />
+</p>
+
+<p align="center"><sub>All content shown is example data from <code>portfolio.config.ts</code>.</sub></p>
 
 ---
 
@@ -39,6 +51,24 @@ All of your content lives in a single configuration file.
 - **Text format options.** Visitors can pick the font (sans, serif or mono) and the text size (small, default or large).
 - **Modern, responsive UI.** Floating navigation dock, timeline views, typewriter hero title and smooth transitions with Framer Motion.
 - **No secrets in code.** API keys are read from environment variables only.
+
+---
+
+## Screenshots
+
+| Light theme | Dark theme |
+|---|---|
+| ![Home page in light theme](docs/screenshots/home-light.png) | ![Home page in dark theme](docs/screenshots/home-dark.png) |
+
+**The chat answers with interactive sections**
+
+| Projects | Work experience |
+|---|---|
+| ![Chat showing the projects section](docs/screenshots/chat-projects.png) | ![Chat showing the work experience timeline in dark mode](docs/screenshots/chat-experience-dark.png) |
+
+| Text format menu | Mobile |
+|---|---|
+| ![Text format menu with font and size options](docs/screenshots/text-format.png) | ![Mobile view in light and dark themes](docs/screenshots/mobile.png) |
 
 ---
 
@@ -154,6 +184,8 @@ appearance: {
 ```
 
 To change the accent color, edit `--brand` (and `--brand-rgb`) for each theme at the top of [`app/globals.css`](app/globals.css).
+
+The browser tab icon is generated from your `shortName` (your initial on the brand color) in [`app/icon.tsx`](app/icon.tsx).
 
 ---
 
