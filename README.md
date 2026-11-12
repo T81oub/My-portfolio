@@ -167,17 +167,12 @@ resumes: [
 ],
 ```
 
-### 4. Pick skill icons
-
-Each skill can use an icon key such as `python`, `pytorch`, `docker`, `react` or `aws`.
-The full list is in [`lib/icons.tsx`](lib/icons.tsx). Skills without an icon get a default one.
-
-### 5. Tune the chatbot
+### 4. Tune the chatbot
 
 The system prompt is generated automatically from your config ([`app/api/chat/prompt.ts`](app/api/chat/prompt.ts)).
 Adjust `chatbot.tone`, `chatbot.welcomeMessage` and `chatbot.privateTopics` to change how the assistant talks.
 
-### 6. Set the default look
+### 5. Set the default look
 
 Choose what first-time visitors see. They can still change it from the buttons in the top-right corner.
 
@@ -278,12 +273,3 @@ Any platform that supports Next.js (Netlify, Railway, a Docker container, etc.) 
 - [Web3Forms](https://web3forms.com) for the contact form
 
 ---
-
-## License
-
-Released under the [MIT License](LICENSE). Feel free to fork it and build your own portfolio.
-
-<div align="center">
-<br/>
-Built by <a href="https://github.com/T81oub">T81oub</a>. If this template helped you, consider giving it a star.
-</div>
