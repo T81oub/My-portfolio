@@ -12,7 +12,7 @@ export const maxDuration = 30;
  */
 function getModel(): LanguageModel | null {
   if (process.env.MISTRAL_API_KEY) {
-    return mistral(process.env.MISTRAL_MODEL || "mistral-small-latest");
+    return mistral(process.env.MISTRAL_MODEL || "ministral-3b-latest");
   }
   if (process.env.OPENAI_API_KEY) {
     return openai(process.env.OPENAI_MODEL || "gpt-4o-mini");
@@ -22,6 +22,9 @@ function getModel(): LanguageModel | null {
 
 function errorHandler(error: unknown) {
   console.error("[CHAT-API] Error:", error);
+  if (String((error as Error)?.message ?? error).includes("Rate limit")) {
+    return "The AI provider's rate limit was reached. Please wait a minute and try again.";
+  }
   if (error == null) {
     return "Unknown error";
   }
@@ -67,6 +70,8 @@ export async function POST(req: Request) {
       toolCallStreaming: true,
       tools,
       maxSteps: 2,
+      // Fail fast instead of waiting through several retries (free tiers are rate limited)
+      maxRetries: 1,
     });
 
     return result.toDataStreamResponse({

@@ -99,7 +99,7 @@ Open [http://localhost:3000](http://localhost:3000). The site starts with exampl
 | Variable | Required | Description |
 |---|---|---|
 | `MISTRAL_API_KEY` | One of the two | Mistral key (free tier available). Get one at [console.mistral.ai](https://console.mistral.ai/api-keys). |
-| `MISTRAL_MODEL` | No | Mistral model to use. Defaults to `mistral-small-latest`. |
+| `MISTRAL_MODEL` | No | Mistral model to use. Defaults to `ministral-3b-latest`, the smallest model. `ministral-8b-latest` and `mistral-small-latest` give better answers. |
 | `OPENAI_API_KEY` | One of the two | OpenAI key. Get one at [platform.openai.com](https://platform.openai.com/api-keys). |
 | `OPENAI_MODEL` | No | OpenAI model to use. Defaults to `gpt-4o-mini`. |
 | `NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY` | No | Enables the contact form. Free at [web3forms.com](https://web3forms.com). |
