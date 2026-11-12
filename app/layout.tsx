@@ -45,7 +45,8 @@ export default function RootLayout({
         {/* Applies the visitor's saved theme and text format before the first paint */}
         <script dangerouslySetInnerHTML={{ __html: appearanceInitScript }} />
       </head>
-      <body>
+      {/* Browser extensions (e.g. Grammarly) add attributes to <body> before React loads */}
+      <body suppressHydrationWarning>
         {children}
       </body>
     </html>
