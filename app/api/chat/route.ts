@@ -1,9 +1,24 @@
+import { mistral } from "@ai-sdk/mistral";
 import { openai } from "@ai-sdk/openai";
-import { streamText } from "ai";
+import { streamText, type LanguageModel } from "ai";
 import { SYSTEM_PROMPT } from "./prompt";
 import { getWorkExperiences, getProjects, getSkills, getEducation, getCV, getAboutMe, getContact, getHelp } from "./tools";
 
 export const maxDuration = 30;
+
+/**
+ * Picks the chat model from the environment:
+ * Mistral first (if MISTRAL_API_KEY is set), then OpenAI (if OPENAI_API_KEY is set).
+ */
+function getModel(): LanguageModel | null {
+  if (process.env.MISTRAL_API_KEY) {
+    return mistral(process.env.MISTRAL_MODEL || "mistral-small-latest");
+  }
+  if (process.env.OPENAI_API_KEY) {
+    return openai(process.env.OPENAI_MODEL || "gpt-4o-mini");
+  }
+  return null;
+}
 
 function errorHandler(error: unknown) {
   console.error("[CHAT-API] Error:", error);
@@ -20,11 +35,12 @@ function errorHandler(error: unknown) {
 }
 
 export async function POST(req: Request) {
-  if (!process.env.OPENAI_API_KEY) {
-    console.error("[CHAT-API] OPENAI_API_KEY is not set. Add it to .env.local");
+  const model = getModel();
+  if (!model) {
+    console.error("[CHAT-API] No AI provider configured. Set MISTRAL_API_KEY or OPENAI_API_KEY in .env.local");
     return new Response(
       "I can't answer yet: no AI model API key has been added. " +
-        "Add OPENAI_API_KEY to .env.local, then restart the server.",
+        "Add MISTRAL_API_KEY or OPENAI_API_KEY to .env.local, then restart the server.",
       { status: 503 }
     );
   }
@@ -46,7 +62,7 @@ export async function POST(req: Request) {
     };
 
     const result = streamText({
-      model: openai(process.env.OPENAI_MODEL ?? "gpt-4o-mini"),
+      model,
       messages,
       toolCallStreaming: true,
       tools,

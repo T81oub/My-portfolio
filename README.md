@@ -14,6 +14,7 @@ All of your content lives in a single configuration file.
 ![React](https://img.shields.io/badge/React_19-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
 ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
 ![Bootstrap](https://img.shields.io/badge/Bootstrap_5-7952B3?style=for-the-badge&logo=bootstrap&logoColor=white)
+![Mistral AI](https://img.shields.io/badge/Mistral_AI-FA520F?style=for-the-badge&logo=mistralai&logoColor=white)
 ![OpenAI](https://img.shields.io/badge/OpenAI-412991?style=for-the-badge&logo=openai&logoColor=white)
 ![Vercel AI SDK](https://img.shields.io/badge/Vercel_AI_SDK-000000?style=for-the-badge&logo=vercel&logoColor=white)
 
@@ -97,9 +98,14 @@ Open [http://localhost:3000](http://localhost:3000). The site starts with exampl
 
 | Variable | Required | Description |
 |---|---|---|
-| `OPENAI_API_KEY` | Yes | Used by the chatbot. Get one at [platform.openai.com](https://platform.openai.com/api-keys). |
-| `OPENAI_MODEL` | No | Chat model to use. Defaults to `gpt-4o-mini`. |
+| `MISTRAL_API_KEY` | One of the two | Mistral key (free tier available). Get one at [console.mistral.ai](https://console.mistral.ai/api-keys). |
+| `MISTRAL_MODEL` | No | Mistral model to use. Defaults to `mistral-small-latest`. |
+| `OPENAI_API_KEY` | One of the two | OpenAI key. Get one at [platform.openai.com](https://platform.openai.com/api-keys). |
+| `OPENAI_MODEL` | No | OpenAI model to use. Defaults to `gpt-4o-mini`. |
 | `NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY` | No | Enables the contact form. Free at [web3forms.com](https://web3forms.com). |
+
+**Which model is used?** If `MISTRAL_API_KEY` is set, the chatbot uses Mistral. Otherwise it falls back to OpenAI.
+To switch back to OpenAI, just leave `MISTRAL_API_KEY` empty.
 
 > `.env.local` is git-ignored. Never commit real keys.
 
@@ -196,7 +202,7 @@ flowchart LR
     V[Visitor] -->|question| UI[Chat UI<br/>useChat]
     UI -->|POST /api/chat| API[API route<br/>streamText]
     CFG[(portfolio.config.ts)] --> API
-    API -->|system prompt + tools| LLM[OpenAI]
+    API -->|system prompt + tools| LLM[Mistral or OpenAI]
     LLM -->|tool call, e.g. getProjects| API
     API -->|streamed response| UI
     UI -->|ToolRenderer| C[React components<br/>Projects, Skills, Resume...]
@@ -256,7 +262,7 @@ The easiest option is [Vercel](https://vercel.com/new):
 
 1. Push your fork to GitHub.
 2. Import the repository in Vercel.
-3. Add `OPENAI_API_KEY` (and optionally `NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY`) in **Project Settings > Environment Variables**.
+3. Add `MISTRAL_API_KEY` or `OPENAI_API_KEY` (and optionally `NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY`) in **Project Settings > Environment Variables**.
 4. Deploy.
 
 Any platform that supports Next.js (Netlify, Railway, a Docker container, etc.) works as well.
@@ -266,7 +272,7 @@ Any platform that supports Next.js (Netlify, Railway, a Docker container, etc.) 
 ## Tech stack
 
 - [Next.js 15](https://nextjs.org) (App Router) and [React 19](https://react.dev)
-- [Vercel AI SDK](https://sdk.vercel.ai) with the OpenAI provider
+- [Vercel AI SDK](https://sdk.vercel.ai) with the Mistral and OpenAI providers
 - [Bootstrap 5](https://getbootstrap.com) with its built-in light and dark color modes
 - [Framer Motion](https://www.framer.com/motion/) for animations
 - [Web3Forms](https://web3forms.com) for the contact form
