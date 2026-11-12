@@ -1,10 +1,41 @@
 import { mistral } from "@ai-sdk/mistral";
 import { openai } from "@ai-sdk/openai";
-import { streamText, type LanguageModel } from "ai";
+import { streamText, type CoreMessage, type LanguageModel } from "ai";
 import { SYSTEM_PROMPT } from "./prompt";
-import { getWorkExperiences, getProjects, getSkills, getEducation, getCV, getAboutMe, getContact, getHelp } from "./tools";
+import { getWorkExperiences, getProjects, getSkills, getEducation, getCV, getAboutMe, getContact } from "./tools";
 
 export const maxDuration = 30;
+
+/** Token savers: only recent messages are sent, and answers are capped. */
+const MAX_HISTORY_MESSAGES = 6;
+const MAX_OUTPUT_TOKENS = 300;
+
+interface ChatMessage {
+  role: string;
+  content: string;
+  toolInvocations?: { toolName: string }[];
+}
+
+/**
+ * Keeps the last few messages as plain text, starting on a user message.
+ * Past tool calls become a short note: cheaper, and Mistral rejects a user
+ * message that directly follows a tool result.
+ */
+function recentMessages(messages: ChatMessage[]): CoreMessage[] {
+  const recent = messages
+    .filter((m) => m.role === "user" || m.role === "assistant")
+    .slice(-MAX_HISTORY_MESSAGES);
+  const firstUser = recent.findIndex((m) => m.role === "user");
+
+  return recent
+    .slice(Math.max(firstUser, 0))
+    .map((m): CoreMessage => {
+      if (m.role === "user") return { role: "user", content: m.content };
+      const shown = m.toolInvocations?.map((t) => t.toolName).join(", ");
+      return { role: "assistant", content: m.content || (shown ? `(Displayed: ${shown})` : "") };
+    })
+    .filter((m) => m.content !== "");
+}
 
 /**
  * Picks the chat model from the environment:
@@ -51,8 +82,6 @@ export async function POST(req: Request) {
   try {
     const { messages } = await req.json();
 
-    messages.unshift(SYSTEM_PROMPT);
-
     const tools = {
       getWorkExperiences,
       getProjects,
@@ -61,15 +90,16 @@ export async function POST(req: Request) {
       getCV,
       getAboutMe,
       getContact,
-      getHelp,
     };
 
     const result = streamText({
       model,
-      messages,
+      messages: [SYSTEM_PROMPT, ...recentMessages(messages)],
       toolCallStreaming: true,
       tools,
-      maxSteps: 2,
+      // One model call per question: when a tool is called, its UI section is the answer
+      maxSteps: 1,
+      maxTokens: MAX_OUTPUT_TOKENS,
       // Fail fast instead of waiting through several retries (free tiers are rate limited)
       maxRetries: 1,
     });

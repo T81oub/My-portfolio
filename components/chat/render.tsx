@@ -24,8 +24,6 @@ const toolComponents: Record<string, React.ComponentType | null> = {
   getCV: Resume,
   getAboutMe: AboutMe,
   getContact: Contact,
-  // The assistant's text answer is enough here
-  getHelp: null,
 };
 
 export default function ToolRenderer({ toolInvocations }: ToolRendererProps) {

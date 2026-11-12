@@ -74,17 +74,3 @@ export const getContact = tool({
     
   },
 });
-
-export const getHelp = tool({
-  description: 'This tool will show a brief introduction about this portfolio',
-  parameters: z.object({}),
-  execute: async () => {
-     console.log('[Tool] getHelp called');
-    return "This is my portfolio. Feel free to ask me anything you'd like to know!";
-    
-  },
-});
-
-
-
-
